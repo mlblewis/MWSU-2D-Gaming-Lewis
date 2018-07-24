@@ -4,7 +4,7 @@ var play = {
 		// Game width and height for convenience
 		w = game.width
 		h = game.height
-
+		point = 0;
 		frame_counter = 0
 		// Bg color
 		game.stage.backgroundColor = BG_COLOR
@@ -14,7 +14,7 @@ var play = {
 		platform_width = game.cache.getImage('obstacle').width
 		// Score sound
 		this.sound.score = game.add.audio('score')
-		this.sound.score.volume = .4
+		this.sound.score.volume = .1
 		// Death sound
 		this.sound.kill = game.add.audio('kill')
 		// Music
@@ -24,6 +24,7 @@ var play = {
 		this.physics.startSystem(Phaser.Physics.ARCADE)
 		// Obstacles
 		this.obstacles = game.add.group()
+		this.bullets = game.add.group()
 		// Player
 		this.player = game.add.sprite(game.width / 2, 250, 'player')
 		game.physics.enable(this.player, Phaser.Physics.ARCADE)
@@ -40,20 +41,19 @@ var play = {
 		game.input.onDown.add(this.onDown, this)
 
 		this.pauseAndUnpause(game)
-		//Physics for bullets
-		bullets = game.add.group();
 		//control input for bullets
-		gunFire = this.game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR)
+		this.gunFire = this.game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR)
 	},
 
 	
 
 	update: function () {
-		//as score increases decrese the frames between spawning objects.
+		//as score increases, decrese the frames between spawning objects.
 		var frames = 90 - game.global.score * 1
 		this.bmpText.text = game.global.score
 		// Collision
 		game.physics.arcade.overlap(this.player, this.obstacles, this.killPlayer, null, this)
+		game.physics.arcade.overlap(this.bullets, this.obstacles, this.destroyAllHumans, null, this)
 		// Spawn enemies
 		if (frame_counter % frames == 0) {
 			var gap = 120
@@ -64,21 +64,26 @@ var play = {
 		}
 
 		this.move();
-		if (this.gunFire.isDown){
-			bullet = bullets.create(this.player.x, this.player.y + 10, 'bullet'),
-			bullet.enableBody = true,
-			bullet.physicsBodyType = Phaser.Physics.ARCADE,
-			bullet.setVelocity = 850
+		if (this.gunFire.isDown && this.bullets.length < 11){
+			this.fireBullets(this.player, this.bullets)
 		}
 		frame_counter++
 		game.global.score += this.scorePoint();
 	},
 
-	fireBullets: function(player, bullets) {
-		var bullet = this.bullets.create(this.player.x, this.player.y + 10, 'bullet', entity)
-		bullet.enableBody = true;
-		bullet.physicsBodyType = Phaser.Physics.ARCADE;
-        bullet.setVelocity.y = 850;
+	fireBullets: function (player, bullets) {
+		var bullet = this.bullets.create(this.player.x, this.player.y + 40, 'bullet')
+		game.physics.enable(bullet, Phaser.Physics.ARCADE)
+		bullet.enableBody = true
+		bullet.colliderWorldBounds = true
+		bullet.body.immovable = true
+		bullet.anchor.setTo(.5,.5)
+		bullet.scale.setTo(.2,.2)
+		bullet.body.velocity.y = 200
+		console.log(this.bullet)
+		bullet.checkWorldBounds = true;
+		bullet.events.onOutOfBounds.add(this.killBullets, this)
+		bullet.outOfBoundsKill = true;
 	},
 
 	spawnObstacle: function (entity, x, y, speed, has_given_point) {
@@ -108,26 +113,37 @@ var play = {
 		console.log(this.obstacles.children.length);
 	},
 
+	killBullets: function (bullet) {
+		console.log(bullet);
+		this.bullets.remove(bullet);
+		console.log(this.bullets.children.length);
+	},
+
+	destroyAllHumans:function (obstacle, bullet){
+		this.obstacles.remove(obstacle);
+		this.bullets.remove(bullet);
+		return point++
+	},
 	scorePoint: function () {
 		//console.log(this.obstacles)
-		var point = 0;
-		var obstacles = this.obstacles.children;
+		//var point = 0;
+		//var obstacles = this.obstacles.children;
+		//point++
+		// for (var i = 0; i < obstacles.length; i++) {
+		// 	if (obstacles[i].visible) {
+		// 		// console.log("vis: ")
+		// 		// console.log(obstacles[i].y,this.player.y);
+		// 		let py = this.player.y;
+		// 		let oy = obstacles[i].y;
+		// 		let ox = obstacles[i].x;
 
-		for (var i = 0; i < obstacles.length; i++) {
-			if (obstacles[i].visible) {
-				// console.log("vis: ")
-				// console.log(obstacles[i].y,this.player.y);
-				let py = this.player.y;
-				let oy = obstacles[i].y;
-				let ox = obstacles[i].x;
-
-				//if player is below obstacle and within 5 pixels and choose only one of the pair
-				if (py > oy && Math.abs(py - oy) < 5 && ox < game.width / 2) {
-					point++;
-					this.sound.score.play('', 0, 0.5, false)
-				}
-			}
-		}
+		// 		//if player is below obstacle and within 5 pixels and choose only one of the pair
+		// 		if (py > oy && Math.abs(py - oy) < 5 && ox < game.width / 2) {
+		// 			point++;
+		// 			this.sound.score.play('', 0, 0.5, false)
+		// 		}
+		// 	}
+		// }
 		return point;
 	},
 
