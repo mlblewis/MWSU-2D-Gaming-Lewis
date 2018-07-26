@@ -22,8 +22,8 @@ var level_01 = {
 		//animations added for assignment ML
 		this.player.animations.add('jump_left', Phaser.Animation.generateFrameNames('Jump_left', 0 , 9), 20, true);
 		this.player.animations.add('jump_right', Phaser.Animation.generateFrameNames('Jump_right', 0,9), 20, true);
-		this.player.animations.add('death',Phaser.Animation.generateFrameNames('Dead', 0,10),20,true);
-		this.player.animations.add('run_left', Phaser.Animations.generateFrameNames('Run_left',0,9),20,true)
+		this.player.animations.add('death', Phaser.Animation.generateFrameNames('Dead', 0,10),20,true);
+		this.player.animations.add('run_left', Phaser.Animation.generateFrameNames('Run_left',0,9),20,true);
 
 		this.player.animations.play('idle_left');
 		// turn physics on for player
@@ -37,7 +37,7 @@ var level_01 = {
 		this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
 		this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
 		this.spaceBar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		this.shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+		this.shift = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
 		this.f = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 		game.addPauseButton(game);
 	},
@@ -79,7 +79,7 @@ var level_01 = {
 			this.player.body.velocity.y = 200;
 		}
 
-		if (this.leftKey.isUp && this.rightKey.isUp && this.upKey.isUp && this.downKey.isUp) {
+		if (this.leftKey.isUp && this.rightKey.isUp && this.upKey.isUp && this.downKey.isUp && !this.spaceBar.isDown && !this.shift.isDown) {
 			if(this.prevDir == 'left'){
 				this.player.animations.play('idle_left');
 			}else{
@@ -108,7 +108,7 @@ var level_01 = {
 		}
 
 		if (this.game.input.keyboard.isDown(Phaser.Keyboard.SHIFT) && this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
-			this.player.animations.play('run_left')
+		 	this.player.animations.play('run_left')
 		}
 
 
