@@ -19,8 +19,13 @@ var level_01 = {
 		this.player.animations.add('walk_right', Phaser.Animation.generateFrameNames('Walk_right', 0, 8), 20, true);
 		this.player.animations.add('idle_left', Phaser.Animation.generateFrameNames('Idle_left', 0, 9), 20, true);
 		this.player.animations.add('idle_right', Phaser.Animation.generateFrameNames('Idle_right', 0, 9), 20, true);
-		this.player.animations.play('idle_left');
+		//animations added for assignment ML
+		this.player.animations.add('jump_left', Phaser.Animation.generateFrameNames('Jump_left', 0 , 9), 20, true);
+		this.player.animations.add('jump_right', Phaser.Animation.generateFrameNames('Jump_right', 0,9), 20, true);
+		this.player.animations.add('death',Phaser.Animation.generateFrameNames('Dead', 0,10),20,true);
+		this.player.animations.add('run_left', Phaser.Animations.generateFrameNames('Run_left',0,9),20,true)
 
+		this.player.animations.play('idle_left');
 		// turn physics on for player
 		game.physics.arcade.enable(this.player);
 
@@ -32,7 +37,8 @@ var level_01 = {
 		this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
 		this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
 		this.spaceBar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		this.shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFTKEY);
+		this.shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+		this.f = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 		game.addPauseButton(game);
 	},
 
@@ -45,17 +51,17 @@ var level_01 = {
 		// Use the shift key to add running by changing speed and animation
 
 		// Create a move class or function to clean up code.
-		if (this.leftKey.isDown) {
+		if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
 			this.player.body.velocity.x = -200;
 			this.player.animations.play('walk_left');
 			this.prevDir = 'left'
 		}
-		if (this.rightKey.isDown) {
+		if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
 			this.player.body.velocity.x = 200;
 			this.player.animations.play('walk_right');
 			this.prevDir = 'right'
 		}
-		if (this.upKey.isDown) {
+		if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
 			if(this.prevDir == 'left'){
 				this.player.animations.play('walk_left');
 			}else{
@@ -64,7 +70,7 @@ var level_01 = {
 			this.player.body.velocity.y = -200;
 			
 		}
-		if (this.downKey.isDown) {
+		if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
 			if(this.prevDir == 'left'){
 				this.player.animations.play('walk_left');
 			}else{
@@ -83,16 +89,31 @@ var level_01 = {
 			this.player.body.velocity.y = 0;
 		}
 
-		if (this.spaceBar.isDown) {
-
+		if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
 			this.player.scale.setTo(1.5,1.5)
+			if(this.prevDir == 'left'){
+				this.player.animations.play('jump_left')
+			}else{
+				this.player.animations.play('jump_right')
+			}
 		}else{
 			this.player.scale.setTo(1,1)
 		}
 
-		if (game.input.activePointer.isDown){
-			
+		if(this.game.input.keyboard.isDown(Phaser.Keyboard.ENTER)){
+			this.player.animations.play('death')
 		}
+		if (this.game.input.activePointer.isDown){
+			this.player.animations.play('death')
+		}
+
+		if (this.game.input.keyboard.isDown(Phaser.Keyboard.SHIFT) && this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
+			this.player.animations.play('run_left')
+		}
+
+
+
+
 	},
 
 	render: function(){
