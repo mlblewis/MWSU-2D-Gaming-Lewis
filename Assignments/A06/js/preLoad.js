@@ -16,7 +16,7 @@ var preLoad = {
 		// load images here: 
 		//////////////////////////////////////////////////////
 		game.load.image('pause', 'assets/images/pause.png');			
-		game.load.image('splash', 'assets/images/splash_screen800.jpg');
+		game.load.image('splash', 'assets/images/splash_screen_800.jpg');
 		game.load.image('gameOver', 'assets/images/game_over_800.png');
 
 		// load atlas here: 
@@ -31,7 +31,9 @@ var preLoad = {
 		// load spritesheets here:
 		//////////////////////////////////////////////////////
 		game.load.spritesheet('portal_smoke', 'assets/sprites/smoke.png', 128, 128)
+		game.load.spritesheet('skeleton', 'assets/sprites/skeleton.png', 118, 228)
 		
+		game.load.spritesheet('zombie', 'assets/sprites/zombie.png', 50, 76)
 		// load audio here: 
 		//////////////////////////////////////////////////////
 		//game.load.audio('audiokey1', 'path/to/sounds/one.mp3')

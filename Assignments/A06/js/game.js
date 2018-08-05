@@ -1,9 +1,15 @@
 // todo:
-//     Add fireballs with cast button
-//     add attack to enemy
-//     add enimies/hazards
+//     add levels
 //     add level transitions
-//     add healthbars
+//     add coins, animated and unanimated with different score values
+// +   add healthbars
+//     add attack to enemy
+//     add hud to keep track of health and coins
+//     add enemies/hazards, more animations, more points
+//     add finish line with finish splash screen
+//
+//     make healthbars look better
+//     Add fireballs with cast button
 
 var game = new Phaser.Game(800, 650, Phaser.Canvas, "game");
 
@@ -14,17 +20,17 @@ game.global = {
     best_score: 0,
     level: 1,
     backgroundColor: "#000000",
-    current_level: "level_01"
+    current_level: "tunnel"
 }
 
 game.state.add("boot", boot);
 game.state.add("preLoad", preLoad);
 game.state.add("mainMenu", mainMenu);
-game.state.add("level_01", level_01);
-game.state.add("level_02", level_02);
-game.state.add("level_03", level_03);
-game.state.add("level_04", level_04);
-game.state.add("level_05", level_05);
+game.state.add("tunnel", tunnel);
+// game.state.add("cave", cave);
+// game.state.add("cave_2", cave_2);
+// game.state.add("level_04", level_04);
+// game.state.add("level_05", level_05);
 game.state.add("gameOver", gameOver);
 game.state.start("boot");
 
